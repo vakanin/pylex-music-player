@@ -23,6 +23,10 @@ class AudioPlayer(Ui_MainWindow()):
         if Phonon.State.PausedState != self.media_obj.state():
             self.media_obj.pause()
 
+    # stop the song
+    def stop(self):
+        pass
+
     # this method will play next song from playlist or maybe random song,
     # if shuffle mode is on
     def next(self):
@@ -71,7 +75,7 @@ class AudioPlayer(Ui_MainWindow()):
         sys.exit()
 
 
-class PlayList():
+class Playlist():
 
     def __init__(self):
         pass
@@ -99,3 +103,14 @@ class PlayList():
     # this method will shuffle a playlist
     def shuffle(self):
         pass
+
+    # this method will show current time of the song
+    # and will update diagram line
+    def time_change(self):
+        pass
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = AudioPlayer()
+    window.show()
+    sys.exit(app.exec_())
