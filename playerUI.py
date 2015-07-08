@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Wed Jul  8 03:47:33 2015
+# Created: Wed Jul  8 15:10:02 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -53,6 +53,10 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
+        self.menuPlaylist = QtGui.QMenu(self.menubar)
+        self.menuPlaylist.setObjectName("menuPlaylist")
+        self.menu_Sort_by = QtGui.QMenu(self.menuPlaylist)
+        self.menu_Sort_by.setObjectName("menu_Sort_by")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -61,9 +65,26 @@ class Ui_MainWindow(object):
         self.action_Open.setObjectName("action_Open")
         self.action_Quit = QtGui.QAction(MainWindow)
         self.action_Quit.setObjectName("action_Quit")
+        self.actionShuffle = QtGui.QAction(MainWindow)
+        self.actionShuffle.setObjectName("actionShuffle")
+        self.actionFilename = QtGui.QAction(MainWindow)
+        self.actionFilename.setCheckable(True)
+        self.actionFilename.setObjectName("actionFilename")
+        self.actionTitle = QtGui.QAction(MainWindow)
+        self.actionTitle.setCheckable(True)
+        self.actionTitle.setObjectName("actionTitle")
+        self.actionArtist = QtGui.QAction(MainWindow)
+        self.actionArtist.setCheckable(True)
+        self.actionArtist.setObjectName("actionArtist")
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addAction(self.action_Quit)
+        self.menu_Sort_by.addAction(self.actionFilename)
+        self.menu_Sort_by.addAction(self.actionTitle)
+        self.menu_Sort_by.addAction(self.actionArtist)
+        self.menuPlaylist.addAction(self.menu_Sort_by.menuAction())
+        self.menuPlaylist.addAction(self.actionShuffle)
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuPlaylist.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -76,6 +97,12 @@ class Ui_MainWindow(object):
         self.prevButton.setText(QtGui.QApplication.translate("MainWindow", "<<", None, QtGui.QApplication.UnicodeUTF8))
         self.nextButton.setText(QtGui.QApplication.translate("MainWindow", ">>", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "&File", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuPlaylist.setTitle(QtGui.QApplication.translate("MainWindow", "&Playlist", None, QtGui.QApplication.UnicodeUTF8))
+        self.menu_Sort_by.setTitle(QtGui.QApplication.translate("MainWindow", "&Sort by", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Open.setText(QtGui.QApplication.translate("MainWindow", "&Open", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Quit.setText(QtGui.QApplication.translate("MainWindow", "&Quit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionShuffle.setText(QtGui.QApplication.translate("MainWindow", "Shuffle", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionFilename.setText(QtGui.QApplication.translate("MainWindow", "Filename", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionTitle.setText(QtGui.QApplication.translate("MainWindow", "Title", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionArtist.setText(QtGui.QApplication.translate("MainWindow", "Artist", None, QtGui.QApplication.UnicodeUTF8))
 

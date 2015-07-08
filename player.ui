@@ -151,7 +151,23 @@
     <addaction name="action_Open"/>
     <addaction name="action_Quit"/>
    </widget>
+   <widget class="QMenu" name="menuPlaylist">
+    <property name="title">
+     <string>&amp;Playlist</string>
+    </property>
+    <widget class="QMenu" name="menu_Sort_by">
+     <property name="title">
+      <string>&amp;Sort by</string>
+     </property>
+     <addaction name="actionFilename"/>
+     <addaction name="actionTitle"/>
+     <addaction name="actionArtist"/>
+    </widget>
+    <addaction name="menu_Sort_by"/>
+    <addaction name="actionShuffle"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuPlaylist"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Open">
@@ -162,6 +178,35 @@
   <action name="action_Quit">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="actionShuffle">
+   <property name="text">
+    <string>Shuffle</string>
+   </property>
+  </action>
+  <action name="actionFilename">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Filename</string>
+   </property>
+  </action>
+  <action name="actionTitle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Title</string>
+   </property>
+  </action>
+  <action name="actionArtist">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Artist</string>
    </property>
   </action>
  </widget>
