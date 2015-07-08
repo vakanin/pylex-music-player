@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Wed Jul  8 23:11:06 2015
+# Created: Thu Jul  9 01:39:06 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,11 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+        MainWindow.setWindowModality(QtCore.Qt.ApplicationModal)
+        MainWindow.setEnabled(True)
         MainWindow.resize(640, 592)
+        MainWindow.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        MainWindow.setAutoFillBackground(True)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.playButton = QtGui.QPushButton(self.centralwidget)
@@ -47,6 +51,14 @@ class Ui_MainWindow(object):
         self.nextButton = QtGui.QPushButton(self.centralwidget)
         self.nextButton.setGeometry(QtCore.QRect(440, 280, 51, 41))
         self.nextButton.setObjectName("nextButton")
+        self.repeatCheckBox = QtGui.QCheckBox(self.centralwidget)
+        self.repeatCheckBox.setEnabled(False)
+        self.repeatCheckBox.setGeometry(QtCore.QRect(530, 240, 81, 22))
+        self.repeatCheckBox.setObjectName("repeatCheckBox")
+        self.randomCheckBox = QtGui.QCheckBox(self.centralwidget)
+        self.randomCheckBox.setEnabled(False)
+        self.randomCheckBox.setGeometry(QtCore.QRect(440, 240, 81, 22))
+        self.randomCheckBox.setObjectName("randomCheckBox")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 640, 25))
@@ -82,6 +94,11 @@ class Ui_MainWindow(object):
         self.actionYear = QtGui.QAction(MainWindow)
         self.actionYear.setCheckable(True)
         self.actionYear.setObjectName("actionYear")
+        self.actionRepeat = QtGui.QAction(MainWindow)
+        self.actionRepeat.setCheckable(True)
+        self.actionRepeat.setObjectName("actionRepeat")
+        self.actionClear = QtGui.QAction(MainWindow)
+        self.actionClear.setObjectName("actionClear")
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addAction(self.action_Quit)
         self.menu_Sort_by.addAction(self.actionFilename)
@@ -91,6 +108,8 @@ class Ui_MainWindow(object):
         self.menu_Sort_by.addAction(self.actionYear)
         self.menuPlaylist.addAction(self.menu_Sort_by.menuAction())
         self.menuPlaylist.addAction(self.actionShuffle)
+        self.menuPlaylist.addAction(self.actionRepeat)
+        self.menuPlaylist.addAction(self.actionClear)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlaylist.menuAction())
 
@@ -98,21 +117,25 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "pyLex ", None, QtGui.QApplication.UnicodeUTF8))
         self.playButton.setText(QtGui.QApplication.translate("MainWindow", "Play", None, QtGui.QApplication.UnicodeUTF8))
         self.stopButton.setText(QtGui.QApplication.translate("MainWindow", "Stop", None, QtGui.QApplication.UnicodeUTF8))
         self.exitButton.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
         self.prevButton.setText(QtGui.QApplication.translate("MainWindow", "<<", None, QtGui.QApplication.UnicodeUTF8))
         self.nextButton.setText(QtGui.QApplication.translate("MainWindow", ">>", None, QtGui.QApplication.UnicodeUTF8))
+        self.repeatCheckBox.setText(QtGui.QApplication.translate("MainWindow", "repeat", None, QtGui.QApplication.UnicodeUTF8))
+        self.randomCheckBox.setText(QtGui.QApplication.translate("MainWindow", "random", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "&File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuPlaylist.setTitle(QtGui.QApplication.translate("MainWindow", "&Playlist", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Sort_by.setTitle(QtGui.QApplication.translate("MainWindow", "&Sort by", None, QtGui.QApplication.UnicodeUTF8))
+        self.menu_Sort_by.setTitle(QtGui.QApplication.translate("MainWindow", "Sort by", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Open.setText(QtGui.QApplication.translate("MainWindow", "&Open", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Quit.setText(QtGui.QApplication.translate("MainWindow", "&Quit", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionShuffle.setText(QtGui.QApplication.translate("MainWindow", "Shuffle", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionShuffle.setText(QtGui.QApplication.translate("MainWindow", "&Shuffle", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFilename.setText(QtGui.QApplication.translate("MainWindow", "Filename", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTitle.setText(QtGui.QApplication.translate("MainWindow", "Title", None, QtGui.QApplication.UnicodeUTF8))
         self.actionArtist.setText(QtGui.QApplication.translate("MainWindow", "Artist", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenre.setText(QtGui.QApplication.translate("MainWindow", "Genre", None, QtGui.QApplication.UnicodeUTF8))
         self.actionYear.setText(QtGui.QApplication.translate("MainWindow", "Year", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionRepeat.setText(QtGui.QApplication.translate("MainWindow", "&Repeat", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClear.setText(QtGui.QApplication.translate("MainWindow", "&Clear", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -2,6 +2,12 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,8 +16,14 @@
     <height>592</height>
    </rect>
   </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>pyLex </string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="playButton">
@@ -134,6 +146,38 @@
      <string>&gt;&gt;</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="repeatCheckBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>240</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>repeat</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="randomCheckBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>240</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>random</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -157,7 +201,7 @@
     </property>
     <widget class="QMenu" name="menu_Sort_by">
      <property name="title">
-      <string>&amp;Sort by</string>
+      <string>Sort by</string>
      </property>
      <addaction name="actionFilename"/>
      <addaction name="actionTitle"/>
@@ -167,6 +211,8 @@
     </widget>
     <addaction name="menu_Sort_by"/>
     <addaction name="actionShuffle"/>
+    <addaction name="actionRepeat"/>
+    <addaction name="actionClear"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlaylist"/>
@@ -184,7 +230,7 @@
   </action>
   <action name="actionShuffle">
    <property name="text">
-    <string>Shuffle</string>
+    <string>&amp;Shuffle</string>
    </property>
   </action>
   <action name="actionFilename">
@@ -225,6 +271,19 @@
    </property>
    <property name="text">
     <string>Year</string>
+   </property>
+  </action>
+  <action name="actionRepeat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Repeat</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="text">
+    <string>&amp;Clear</string>
    </property>
   </action>
  </widget>
