@@ -2,7 +2,7 @@ import sys
 import playerUI
 import PySide
 from PyQt4 import *
-
+from functools import partial
 from PySide.phonon import Phonon
 
 
@@ -35,6 +35,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.volumeSlider = Phonon.VolumeSlider(self)
         self.volumeSlider.setGeometry(PySide.QtCore.QRect(520, 310, 91, 29))
         self.volumeSlider.setOrientation(PySide.QtCore.Qt.Horizontal)
+        self.actionFilename.triggered.connect(partial(self.sort, 'f'))
 
     def open(self):
         dialog = PySide.QtGui.QFileDialog()
@@ -43,8 +44,10 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
                                             'Open audio file',
                                             '/home/alex/Music',
                                             "Audio Files (*.mp3 *.wav *.ogg)")[0]
+        song_names = []
         for filename in filenames:
             song_name = filename.split('/')[-1]
+            song_names.append(song_name)            # this line will be removed
             self.listWidget.addItem(song_name)
             self.listWidget.show()
             self.full_paths[song_name] = filename
@@ -58,6 +61,8 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
         self.volumeSlider.setAudioOutput(self.audio_output)
         self.nowPlayingLabel.setText(song_name)
+        meta_data = self.media_obj.metaData()
+        print(meta_data)
         self.media_obj.play()
         self.stopButton.setEnabled(True)
         self.playButton.setEnabled(True)
@@ -65,6 +70,10 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.horizontalSlider.setEnabled(True)
         self.nextButton.setEnabled(True)
         self.prevButton.setEnabled(True)
+        sorted_playlist = Playlist.sort_by_title(song_names)
+        # self.listWidget.clear()
+        #self.listWidget.addItems([('x', 1), ('b', 2)])
+        # self.listWidget.show()
 
     # method that will play double clicked song
     def play_item(self, item):
@@ -116,7 +125,6 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.stop()
         else:
             self.listWidget.setCurrentRow(current_row + 1)
-            self.listWidget.setCurrentRow(current_row + 1)
             next_song_name = self.listWidget.item(current_row + 1).text()
             next_filename = self.full_paths[next_song_name]
             self.media_obj.setCurrentSource(Phonon.MediaSource(next_filename))
@@ -140,6 +148,12 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.media_obj.totalTimeChanged.connect(self.total_time_change)
             self.nowPlayingLabel.setText(prev_song_name)
             self.media_obj.play()
+
+    # this method sort our playlist by file(f), title(t) and artist('a)
+    def sort(self, code):
+        if code == 'f':
+            self.listWidget.sortItems()
+            self.listWidget.show()
 
     # repeat current song while repeat mode is on
     def repeat_song(self):
@@ -171,7 +185,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         pass
 
     # I don't know exactly how to implement this method, but I suppose that
-    # will be something conncected with Last.fm or maybe not :)
+    # will be something connected with Last.fm or maybe not :)
     def scrobble(self):
         pass
 
@@ -179,15 +193,22 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
     def exit(self):
         sys.exit()
 
+    @staticmethod
+    def get_listWidget():
+        return PySide.QtGui.listWidget()
+
 
 class Playlist():
 
-    def __init__(self):
-        pass
+    # this method will sort a playlist by filename alphabetically
+    @staticmethod
+    def sort_by_filename(playlist):
+        return sorted(playlist)
 
-    # this method will sort a playlist alphabetically
-    def sort_by_title(self):
-        pass
+    # this method will sort a playlist by title/alphabetically
+    @staticmethod
+    def sort_by_title(playlist):
+        return sorted(playlist)
 
     # this method will sort a playlist by genre/alphabetically
     def sort_by_genre(self):
