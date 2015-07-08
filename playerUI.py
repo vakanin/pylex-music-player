@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Wed Jul  8 15:10:02 2015
+# Created: Wed Jul  8 23:11:06 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -76,11 +76,19 @@ class Ui_MainWindow(object):
         self.actionArtist = QtGui.QAction(MainWindow)
         self.actionArtist.setCheckable(True)
         self.actionArtist.setObjectName("actionArtist")
+        self.actionGenre = QtGui.QAction(MainWindow)
+        self.actionGenre.setCheckable(True)
+        self.actionGenre.setObjectName("actionGenre")
+        self.actionYear = QtGui.QAction(MainWindow)
+        self.actionYear.setCheckable(True)
+        self.actionYear.setObjectName("actionYear")
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addAction(self.action_Quit)
         self.menu_Sort_by.addAction(self.actionFilename)
         self.menu_Sort_by.addAction(self.actionTitle)
         self.menu_Sort_by.addAction(self.actionArtist)
+        self.menu_Sort_by.addAction(self.actionGenre)
+        self.menu_Sort_by.addAction(self.actionYear)
         self.menuPlaylist.addAction(self.menu_Sort_by.menuAction())
         self.menuPlaylist.addAction(self.actionShuffle)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -105,4 +113,6 @@ class Ui_MainWindow(object):
         self.actionFilename.setText(QtGui.QApplication.translate("MainWindow", "Filename", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTitle.setText(QtGui.QApplication.translate("MainWindow", "Title", None, QtGui.QApplication.UnicodeUTF8))
         self.actionArtist.setText(QtGui.QApplication.translate("MainWindow", "Artist", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenre.setText(QtGui.QApplication.translate("MainWindow", "Genre", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionYear.setText(QtGui.QApplication.translate("MainWindow", "Year", None, QtGui.QApplication.UnicodeUTF8))
 

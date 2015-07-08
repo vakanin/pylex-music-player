@@ -4,13 +4,16 @@ import PySide
 from PyQt4 import *
 from functools import partial
 from PySide.phonon import Phonon
+from mutagen.id3 import ID3
 
 
 class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
 
     def __init__(self, parent=None):
         super(AudioPlayer, self).__init__(parent)
+        # full_paths contain full path name for each media
         self.full_paths = {}
+        self.media_objects_info = {}
         self.setupUi(self)
         self.media_obj = Phonon.MediaObject(self)
         self.media_obj.aboutToFinish.connect(self.next)
@@ -36,14 +39,23 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.volumeSlider.setGeometry(PySide.QtCore.QRect(520, 310, 91, 29))
         self.volumeSlider.setOrientation(PySide.QtCore.Qt.Horizontal)
         self.actionFilename.triggered.connect(partial(self.sort, 'f'))
+        self.actionTitle.triggered.connect(partial(self.sort, 't'))
+        self.actionArtist.triggered.connect(partial(self.sort, 'a'))
+        self.actionYear.triggered.connect(partial(self.sort, 'y'))
+        self.actionGenre.triggered.connect(partial(self.sort, 'g'))
 
     def open(self):
+        self.actionTitle.setChecked(False)
+        self.actionArtist.setChecked(False)
+        self.actionYear.setChecked(False)
+        self.actionGenre.setChecked(False)
         dialog = PySide.QtGui.QFileDialog()
         dialog.setViewMode(PySide.QtGui.QFileDialog.Detail)
         filenames = dialog.getOpenFileNames(self,
                                             'Open audio file',
                                             '/home/alex/Music',
                                             "Audio Files (*.mp3 *.wav *.ogg)")[0]
+
         song_names = []
         for filename in filenames:
             song_name = filename.split('/')[-1]
@@ -61,8 +73,6 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
         self.volumeSlider.setAudioOutput(self.audio_output)
         self.nowPlayingLabel.setText(song_name)
-        meta_data = self.media_obj.metaData()
-        print(meta_data)
         self.media_obj.play()
         self.stopButton.setEnabled(True)
         self.playButton.setEnabled(True)
@@ -70,10 +80,6 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.horizontalSlider.setEnabled(True)
         self.nextButton.setEnabled(True)
         self.prevButton.setEnabled(True)
-        sorted_playlist = Playlist.sort_by_title(song_names)
-        # self.listWidget.clear()
-        #self.listWidget.addItems([('x', 1), ('b', 2)])
-        # self.listWidget.show()
 
     # method that will play double clicked song
     def play_item(self, item):
@@ -131,7 +137,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.media_obj.tick.connect(self.time_change)
             self.media_obj.totalTimeChanged.connect(self.total_time_change)
             self.nowPlayingLabel.setText(next_song_name)
-            self.media_obj.play()
+            self.play()
 
     # this method will start previous song in playlist
     def previous(self):
@@ -147,13 +153,98 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.media_obj.tick.connect(self.time_change)
             self.media_obj.totalTimeChanged.connect(self.total_time_change)
             self.nowPlayingLabel.setText(prev_song_name)
-            self.media_obj.play()
+            self.play()
 
     # this method sort our playlist by file(f), title(t) and artist('a)
     def sort(self, code):
         if code == 'f':
             self.listWidget.sortItems()
             self.listWidget.show()
+            self.actionTitle.setChecked(False)
+            self.actionArtist.setChecked(False)
+            self.actionYear.setChecked(False)
+            self.actionGenre.setChecked(False)
+        elif code == 't':
+            title_song_name = []
+            for song_name, filename in self.full_paths.items():
+                audio = ID3(filename)
+                try:
+                    # in this way we can get title
+                    title = audio['TIT2'].text[0]
+                except:
+                    title = ''
+                title_song_name.append((song_name, title))
+            sorted_title_song_name = Playlist.sort_by_title(title_song_name)
+            songs_sorted_by_title = [song for song, title in
+                                     sorted_title_song_name]
+            self.listWidget.clear()
+            self.listWidget.addItems(songs_sorted_by_title)
+            self.listWidget.show()
+            self.actionFilename.setChecked(False)
+            self.actionArtist.setChecked(False)
+            self.actionYear.setChecked(False)
+            self.actionGenre.setChecked(False)
+        elif code == 'a':
+            artist_song_name = []
+            for song_name, filename in self.full_paths.items():
+                audio = ID3(filename)
+                # in this way we can get artist name
+                try:
+                    artist = audio['TPE1'].text[0]
+                except:
+                    artist = ''
+                artist_song_name.append((song_name, artist))
+            sorted_artist_song_name = \
+                Playlist.sort_by_artist(artist_song_name)
+            songs_sorted_by_artist = [song for song, _ in
+                                      sorted_artist_song_name]
+            self.listWidget.clear()
+            self.listWidget.addItems(songs_sorted_by_artist)
+            self.listWidget.show()
+            self.actionFilename.setChecked(False)
+            self.actionTitle.setChecked(False)
+            self.actionYear.setChecked(False)
+            self.actionGenre.setChecked(False)
+        elif code == 'y':
+            year_song_name = []
+            for song_name, filename in self.full_paths.items():
+                audio = ID3(filename)
+                # in this way we can get released year
+                try:
+                    year = audio['TDRC'].text[0]
+                except:
+                    year = '0'
+                year_song_name.append((song_name, year))
+            sorted_year_song_name = Playlist.sort_by_year(year_song_name)
+            songs_sorted_by_year = [song for song, _ in
+                                    sorted_year_song_name]
+            self.listWidget.clear()
+            self.listWidget.addItems(songs_sorted_by_year)
+            self.listWidget.show()
+            self.actionFilename.setChecked(False)
+            self.actionTitle.setChecked(False)
+            self.actionArtist.setChecked(False)
+            self.actionGenre.setChecked(False)
+        elif code == 'g':
+            genre_song_name = []
+            for song_name, filename in self.full_paths.items():
+                audio = ID3(filename)
+                try:
+                    # in this way we can get genre
+                    genre = audio['TCON'].text[0]
+                except:
+                    genre = ''
+                genre_song_name.append((song_name, genre))
+            sorted_genre_song_name = Playlist.sort_by_genre(genre_song_name)
+            songs_sorted_by_genre = [song for song, _ in
+                                     sorted_genre_song_name]
+            self.listWidget.clear()
+            self.listWidget.addItems(songs_sorted_by_genre)
+            self.listWidget.show()
+            self.actionFilename.setChecked(False)
+            self.actionTitle.setChecked(False)
+            self.actionArtist.setChecked(False)
+            self.actionYear.setChecked(False)
 
     # repeat current song while repeat mode is on
     def repeat_song(self):
@@ -193,10 +284,6 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
     def exit(self):
         sys.exit()
 
-    @staticmethod
-    def get_listWidget():
-        return PySide.QtGui.listWidget()
-
 
 class Playlist():
 
@@ -208,23 +295,25 @@ class Playlist():
     # this method will sort a playlist by title/alphabetically
     @staticmethod
     def sort_by_title(playlist):
-        return sorted(playlist)
+        return sorted(playlist, key=lambda tup: tup[1])
 
     # this method will sort a playlist by genre/alphabetically
-    def sort_by_genre(self):
-        pass
+    @staticmethod
+    def sort_by_genre(playlist):
+        return sorted(playlist, key=lambda tup: tup[1])
 
     # this method will sort a playlist by artist/alphabetically
-    def sort_by_artist(self):
-        pass
+    @staticmethod
+    def sort_by_artist(playlist):
+        return sorted(playlist, key=lambda tup: tup[1])
 
-    # this method ala bala ... by year
-    def sort_by_year(self):
-        pass
-
-    # ... by album
-    def sort_by_album(self):
-        pass
+    # this method will sort playlist by year
+    @staticmethod
+    def sort_by_year(playlist):
+        try:
+            return sorted(playlist, key=lambda tup: tup[1])
+        except:
+            return playlist
 
     # this method will shuffle a playlist
     def shuffle(self):

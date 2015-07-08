@@ -162,6 +162,8 @@
      <addaction name="actionFilename"/>
      <addaction name="actionTitle"/>
      <addaction name="actionArtist"/>
+     <addaction name="actionGenre"/>
+     <addaction name="actionYear"/>
     </widget>
     <addaction name="menu_Sort_by"/>
     <addaction name="actionShuffle"/>
@@ -207,6 +209,22 @@
    </property>
    <property name="text">
     <string>Artist</string>
+   </property>
+  </action>
+  <action name="actionGenre">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Genre</string>
+   </property>
+  </action>
+  <action name="actionYear">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Year</string>
    </property>
   </action>
  </widget>
