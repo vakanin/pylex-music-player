@@ -5,6 +5,7 @@ from PyQt4 import *
 from functools import partial
 from PySide.phonon import Phonon
 from mutagen.id3 import ID3
+from random import randint, choice
 
 
 class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
@@ -16,7 +17,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_objects_info = {}
         self.setupUi(self)
         self.media_obj = Phonon.MediaObject(self)
-        self.media_obj.aboutToFinish.connect(self.next)
+        self.media_obj.finished.connect(self.next_or_repeat)
         self.current_time = 0
         self.action_Open.triggered.connect(self.open)
         self.action_Quit.triggered.connect(self.exit)
@@ -43,6 +44,8 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.actionArtist.triggered.connect(partial(self.sort, 'a'))
         self.actionYear.triggered.connect(partial(self.sort, 'y'))
         self.actionGenre.triggered.connect(partial(self.sort, 'g'))
+        self.actionClear.triggered.connect(self.clear)
+        self.actionShuffle.triggered.connect(self.shuffle_songs)
 
     def open(self):
         self.actionTitle.setChecked(False)
@@ -80,6 +83,21 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.horizontalSlider.setEnabled(True)
         self.nextButton.setEnabled(True)
         self.prevButton.setEnabled(True)
+        self.repeatCheckBox.setEnabled(True)
+        self.randomCheckBox.setEnabled(True)
+
+    # method that will play first song in playlist
+    def play_first(self):
+        song_name = self.listWidget.item(0).text()
+        filename = self.full_paths[song_name]
+        self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
+        Phonon.createPath(self.media_obj, self.audio_output)
+        self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
+        self.media_obj.tick.connect(self.time_change)
+        self.media_obj.totalTimeChanged.connect(self.total_time_change)
+        self.nowPlayingLabel.setText(song_name)
+        self.listWidget.setCurrentRow(0)
+        self.play()
 
     # method that will play double clicked song
     def play_item(self, item):
@@ -123,12 +141,34 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         value = self.horizontalSlider.value()
         self.media_obj.seek(value)
 
+    def next_or_repeat(self):
+        if self.repeatCheckBox.isChecked():
+            self.play()
+        else:
+            self.next()
+
+    def random_song(self):
+        row_index = randint(0, self.listWidget.count() - 1)
+        self.listWidget.setCurrentRow(row_index)
+        song_name = self.listWidget.item(row_index).text()
+        filename = self.full_paths[song_name]
+        self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
+        self.media_obj.tick.connect(self.time_change)
+        self.media_obj.totalTimeChanged.connect(self.total_time_change)
+        self.nowPlayingLabel.setText(song_name)
+        self.play()
+
     # this method will play next song from playlist or maybe random song,
     # if shuffle mode is on
     def next(self):
+        if self.randomCheckBox.isChecked():
+            return self.random_song()
         current_row = self.listWidget.currentRow()
-        if current_row == self.listWidget.count() - 1:
-            self.stop()
+        if current_row >= self.listWidget.count() - 1:
+            if self.actionRepeat.isChecked():
+                self.play_first()
+            else:
+                self.stop()
         else:
             self.listWidget.setCurrentRow(current_row + 1)
             next_song_name = self.listWidget.item(current_row + 1).text()
@@ -246,39 +286,32 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.actionArtist.setChecked(False)
             self.actionYear.setChecked(False)
 
-    # repeat current song while repeat mode is on
-    def repeat_song(self):
-        pass
-
-    # will play current playlist if repeat mode for playlist is active
-    def repeat_playlist(self):
-        pass
-
-    # increase volume
-    def volume_up(self):
-        pass
-
-    # decrease volume
-    def volume_down(self):
-        pass
-
-    # this method will open a dialog window,
-    # from which you can select .mp3 file to be added
-    def add_in_playlist(self):
-        pass
+    # this method will shuffle my songs
+    def shuffle_songs(self):
+        all_songs = []
+        for index in range(self.listWidget.count()):
+            all_songs.append(self.listWidget.item(index).text())
+        self.listWidget.clear()
+        for index in range(len(all_songs)):
+            song = choice(all_songs)
+            self.listWidget.addItem(song)
+            all_songs.remove(song)
+        self.listWidget.show()
 
     # this method will remove selected song from playlist
     def remove_from_playlist(self):
-        pass
-
-    # this method will load new playlist
-    def load_playlist(self):
         pass
 
     # I don't know exactly how to implement this method, but I suppose that
     # will be something connected with Last.fm or maybe not :)
     def scrobble(self):
         pass
+
+    # this method will clear a playlist
+    def clear(self):
+        self.full_paths = {}
+        self.listWidget.clear()
+        self.listWidge.show()
 
     # this method will close the application
     def exit(self):
@@ -315,14 +348,6 @@ class Playlist():
         except:
             return playlist
 
-    # this method will shuffle a playlist
-    def shuffle(self):
-        pass
-
-    # this method will show current time of the song
-    # and will update diagram line
-    def time_change(self):
-        pass
 
 if __name__ == "__main__":
     app = PySide.QtGui.QApplication(sys.argv)
