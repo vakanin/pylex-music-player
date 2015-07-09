@@ -18,6 +18,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.setupUi(self)
         self.media_obj = Phonon.MediaObject(self)
         self.media_obj.finished.connect(self.next_or_repeat)
+        self.media_state = 'Unknown'
         self.current_time = 0
         self.action_Open.triggered.connect(self.open)
         self.action_Quit.triggered.connect(self.exit)
@@ -77,6 +78,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.volumeSlider.setAudioOutput(self.audio_output)
         self.nowPlayingLabel.setText(song_name)
         self.media_obj.play()
+        self.media_state = 'Playing'
         self.stopButton.setEnabled(True)
         self.playButton.setEnabled(True)
         self.playButton.setText("Pause")
@@ -107,20 +109,23 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
         self.nowPlayingLabel.setText(song_name)
-        self.media_obj.play()
+        self.play()
 
     # method that will play song, if the song status is not "playing"
     def play(self):
         if Phonon.State.PlayingState != self.media_obj.state():
             self.media_obj.play()
+            self.media_state = 'Playing'
             self.playButton.setText('Pause')
         else:
             self.pause()
+            self.media_state = 'Paused'
 
     # method that will pause song, if the song status is not "paused"
     def pause(self):
         if Phonon.State.PausedState != self.media_obj.state():
             self.media_obj.pause()
+            self.media_state = 'Paused'
             self.playButton.setText('Play')
 
     # stop the song
@@ -129,6 +134,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.media_obj.stop()
             self.current_time = 0
             self.playButton.setText('Play')
+        self.media_state = 'Stopped'
 
     def time_change(self, time):
         if not self.horizontalSlider.isSliderDown():
