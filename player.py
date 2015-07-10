@@ -101,6 +101,20 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.listWidget.setCurrentRow(0)
         self.play()
 
+    # this method will play last song in playlist
+    def play_last(self):
+        last_index = self.listWidget.count() - 1
+        song_name = self.listWidget.item(last_index).text()
+        filename = self.full_paths[song_name]
+        self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
+        Phonon.createPath(self.media_obj, self.audio_output)
+        self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
+        self.media_obj.tick.connect(self.time_change)
+        self.media_obj.totalTimeChanged.connect(self.total_time_change)
+        self.nowPlayingLabel.setText(song_name)
+        self.listWidget.setCurrentRow(last_index)
+        self.play()
+
     # method that will play double clicked song
     def play_item(self, item):
         song_name = item.text()
