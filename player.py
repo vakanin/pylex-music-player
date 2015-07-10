@@ -6,10 +6,12 @@ from functools import partial
 from PySide.phonon import Phonon
 from mutagen.id3 import ID3
 from random import randint, choice
+from playlist import *
 
 
 class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
 
+    # here we will make all connections with a GUI
     def __init__(self, parent=None):
         super(AudioPlayer, self).__init__(parent)
         # full_paths contain full path name for each media
@@ -47,7 +49,18 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.actionGenre.triggered.connect(partial(self.sort, 'g'))
         self.actionClear.triggered.connect(self.clear)
         self.actionShuffle.triggered.connect(self.shuffle_songs)
+        self.actionSearch.triggered.connect(self.search)
+        self.action_search_emitted = False      # True if search mode is ON
 
+    def keyPressEvent(self, e):
+        if e.key() == PySide.QtCore.Qt.Key_Delete:
+            self.remove()
+
+    # this method will be called, when user clicks with mouse on File-->Open
+    # (actio_Open signal was emitted)
+    # after that you can see new dialog window from which you can choose
+    # all music files for your playlist. With this method you can add
+    # music files every time you want
     def open(self):
         self.actionTitle.setChecked(False)
         self.actionArtist.setChecked(False)
@@ -89,6 +102,9 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.randomCheckBox.setEnabled(True)
 
     # method that will play first song in playlist
+    # this method will be called when repeat playlist mode is on and
+    # after current song finished signal was emitted() or user
+    # clicks on button Next
     def play_first(self):
         song_name = self.listWidget.item(0).text()
         filename = self.full_paths[song_name]
@@ -116,6 +132,9 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.play()
 
     # method that will play double clicked song
+    # user can choose song from playlist and when clicks twice on it, this
+    # method will be called.
+    # item is argument given by QListWidget.itemDoubleClicked signal
     def play_item(self, item):
         song_name = item.text()
         filename = self.full_paths[song_name]
@@ -124,8 +143,22 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
         self.nowPlayingLabel.setText(song_name)
         self.play()
+        if self.action_search_emitted is True:
+            # this is because search method
+            current_playlist = [song for song, _ in self.full_paths.items()]
+            current_song = self.nowPlayingLabel.text()
+            for index, song in enumerate(current_playlist):
+                if song == current_song:
+                    current_row = index
+            self.listWidget.clear()
+            self.listWidget.addItems(sorted(current_playlist))
+            self.listWidget.setCurrentRow(current_row)
+            self.action_search_emitted = False
 
-    # method that will play song, if the song status is not "playing"
+    # method that will play song, if the song status is not "Playing"
+    # this method will be called when you click on button Play
+    # this method should be called every time when you want to play
+    # current media object
     def play(self):
         if Phonon.State.PlayingState != self.media_obj.state():
             self.media_obj.play()
@@ -135,14 +168,16 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.pause()
             self.media_state = 'Paused'
 
-    # method that will pause song, if the song status is not "paused"
+    # method that will pause song, if the song status is not "Paused"
+    # this method will be called when you click on button Pause
     def pause(self):
         if Phonon.State.PausedState != self.media_obj.state():
             self.media_obj.pause()
             self.media_state = 'Paused'
             self.playButton.setText('Play')
 
-    # stop the song
+    # method will stop song, if the song status is not "Stopped"
+    # this method will be called when you click on button Stop
     def stop(self):
         if Phonon.State.StoppedState != self.media_obj.state():
             self.media_obj.stop()
@@ -150,23 +185,34 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.playButton.setText('Play')
         self.media_state = 'Stopped'
 
+    # this method move slider every time when QMediaObject.tick signal was
+    # emitted
     def time_change(self, time):
         if not self.horizontalSlider.isSliderDown():
             self.horizontalSlider.setValue(time)
 
+    # this method set range for slider, when totalTimeChanged signal was
+    # emitted
     def total_time_change(self, time):
         self.horizontalSlider.setRange(0, time)
 
+    # this method will called when you drag slider and play song from
+    # the time which is equal to new slider value
     def slider_value_change(self):
         value = self.horizontalSlider.value()
         self.media_obj.seek(value)
 
+    # this method will be called if repeat song mode is on and
+    # current song was finished and QMediaObject.finished signal was emitted
     def next_or_repeat(self):
         if self.repeatCheckBox.isChecked():
             self.play()
         else:
             self.next()
 
+    # this method will be called if random song mode is on and
+    # current song was finished (QMediaObject.finished signal was emitted) or
+    # button Next was clicked
     def random_song(self):
         row_index = randint(0, self.listWidget.count() - 1)
         self.listWidget.setCurrentRow(row_index)
@@ -178,8 +224,10 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.nowPlayingLabel.setText(song_name)
         self.play()
 
-    # this method will play next song from playlist or maybe random song,
+    # this method will play next song from playlist random song,
     # if shuffle mode is on
+    # this method will be called when button Next was clicked or
+    # current song was finished (QMediaObject.finished signal was emitted)
     def next(self):
         if self.randomCheckBox.isChecked():
             return self.random_song()
@@ -200,6 +248,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.play()
 
     # this method will start previous song in playlist
+    # when button Previous was clicked
     def previous(self):
         current_row = self.listWidget.currentRow()
         if current_row <= 0:
@@ -215,7 +264,9 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.nowPlayingLabel.setText(prev_song_name)
             self.play()
 
-    # this method sort our playlist by file(f), title(t) and artist('a)
+    # this method sort playlist by file(f), title(t), artist(a) and year(y)
+    # this method will be called when you choose Playlist-->Sort by-->key
+    # where key is one of Filename, Artist, Title or Year
     def sort(self, code):
         if code == 'f':
             self.listWidget.sortItems()
@@ -306,7 +357,8 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.actionArtist.setChecked(False)
             self.actionYear.setChecked(False)
 
-    # this method will shuffle my songs
+    # this method will shuffle my songs when actionShuffle signal was emitted
+    # this method will be called when you click on Playlist-->Shuffle
     def shuffle_songs(self):
         all_songs = []
         for index in range(self.listWidget.count()):
@@ -318,56 +370,63 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             all_songs.remove(song)
         self.listWidget.show()
 
+    # this method will be called when you choose Playlist-->Search
+    # this method will filter all songs in playlist in which name
+    # there is your input text
+    def search(self):
+        dialog = PySide.QtGui.QInputDialog()
+        text, ok = dialog.getText(self, 'Search dialog', 'Enter song name:')
+        text = text.lower()
+        if ok:
+            current_playlist = []
+            for index in range(self.listWidget.count()):
+                current_playlist.append(self.listWidget.item(index).text())
+            filtered_playlist = []
+            for song in current_playlist:
+                if text in song.lower():
+                    filtered_playlist.append(song)
+            if filtered_playlist:
+                self.listWidget.clear()
+                self.listWidget.addItems(filtered_playlist)
+                self.listWidget.show()
+                self.action_search_emitted = True
+
     # this method will remove selected song from playlist
-    def remove_from_playlist(self):
-        pass
+    # this method will be called when you pres Delete button on your keyboard
+    def remove(self):
+        if self.action_search_emitted is False:
+            current_playlist = []
+            for index in range(self.listWidget.count()):
+                current_playlist.append(self.listWidget.item(index).text())
+            all_selected_items = self.listWidget.selectedItems()
+            for song in all_selected_items:
+                song_name = song.text()
+                del self.full_paths[song_name]
+                current_playlist.remove(song_name)
+            self.listWidget.clear()
+            self.listWidget.addItems(current_playlist)
+            self.listWidget.show()
+        else:
+            all_selected_items = self.listWidget.selectedItems()
+            for song in all_selected_items:
+                song_name = song.text()
+                del self.full_paths[song_name]
+            playlist = [song for song, _ in self.full_paths.items()]
+            self.listWidget.clear()
+            self.listWidget.addItems(playlist)
+            self.listWidget.show()
 
-    # I don't know exactly how to implement this method, but I suppose that
-    # will be something connected with Last.fm or maybe not :)
-    def scrobble(self):
-        pass
-
-    # this method will clear a playlist
+    # this method will clear a playlist when you click on Playlist-->Clear and
+    # actionClear signal was emitted
     def clear(self):
         self.full_paths = {}
         self.listWidget.clear()
-        self.listWidge.show()
+        self.listWidget.show()
 
-    # this method will close the application
+    # this method will close the application when button Exit was clicked or
+    # you choose File-->Quit
     def exit(self):
         sys.exit()
-
-
-class Playlist():
-
-    # this method will sort a playlist by filename alphabetically
-    @staticmethod
-    def sort_by_filename(playlist):
-        return sorted(playlist)
-
-    # this method will sort a playlist by title/alphabetically
-    @staticmethod
-    def sort_by_title(playlist):
-        return sorted(playlist, key=lambda tup: tup[1])
-
-    # this method will sort a playlist by genre/alphabetically
-    @staticmethod
-    def sort_by_genre(playlist):
-        return sorted(playlist, key=lambda tup: tup[1])
-
-    # this method will sort a playlist by artist/alphabetically
-    @staticmethod
-    def sort_by_artist(playlist):
-        return sorted(playlist, key=lambda tup: tup[1])
-
-    # this method will sort playlist by year
-    @staticmethod
-    def sort_by_year(playlist):
-        try:
-            return sorted(playlist, key=lambda tup: tup[1])
-        except:
-            return playlist
-
 
 if __name__ == "__main__":
     app = PySide.QtGui.QApplication(sys.argv)

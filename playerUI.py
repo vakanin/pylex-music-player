@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Thu Jul  9 01:39:06 2015
+# Created: Fri Jul 10 22:35:09 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.ApplicationModal)
         MainWindow.setEnabled(True)
-        MainWindow.resize(640, 592)
+        MainWindow.resize(640, 591)
         MainWindow.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
         MainWindow.setAutoFillBackground(True)
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -39,7 +39,7 @@ class Ui_MainWindow(object):
         self.pictureLabel.setScaledContents(True)
         self.pictureLabel.setObjectName("pictureLabel")
         self.listWidget = QtGui.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(20, 340, 581, 191))
+        self.listWidget.setGeometry(QtCore.QRect(20, 340, 591, 191))
         self.listWidget.setObjectName("listWidget")
         self.nowPlayingLabel = QtGui.QLabel(self.centralwidget)
         self.nowPlayingLabel.setGeometry(QtCore.QRect(140, 210, 471, 20))
@@ -99,6 +99,8 @@ class Ui_MainWindow(object):
         self.actionRepeat.setObjectName("actionRepeat")
         self.actionClear = QtGui.QAction(MainWindow)
         self.actionClear.setObjectName("actionClear")
+        self.actionSearch = QtGui.QAction(MainWindow)
+        self.actionSearch.setObjectName("actionSearch")
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addAction(self.action_Quit)
         self.menu_Sort_by.addAction(self.actionFilename)
@@ -110,6 +112,7 @@ class Ui_MainWindow(object):
         self.menuPlaylist.addAction(self.actionShuffle)
         self.menuPlaylist.addAction(self.actionRepeat)
         self.menuPlaylist.addAction(self.actionClear)
+        self.menuPlaylist.addAction(self.actionSearch)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuPlaylist.menuAction())
 
@@ -138,4 +141,5 @@ class Ui_MainWindow(object):
         self.actionYear.setText(QtGui.QApplication.translate("MainWindow", "Year", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRepeat.setText(QtGui.QApplication.translate("MainWindow", "&Repeat", None, QtGui.QApplication.UnicodeUTF8))
         self.actionClear.setText(QtGui.QApplication.translate("MainWindow", "&Clear", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSearch.setText(QtGui.QApplication.translate("MainWindow", "Searc&h", None, QtGui.QApplication.UnicodeUTF8))
 

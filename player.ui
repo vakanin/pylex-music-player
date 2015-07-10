@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>592</height>
+    <height>591</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -102,7 +102,7 @@
      <rect>
       <x>20</x>
       <y>340</y>
-      <width>581</width>
+      <width>591</width>
       <height>191</height>
      </rect>
     </property>
@@ -213,6 +213,7 @@
     <addaction name="actionShuffle"/>
     <addaction name="actionRepeat"/>
     <addaction name="actionClear"/>
+    <addaction name="actionSearch"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlaylist"/>
@@ -284,6 +285,11 @@
   <action name="actionClear">
    <property name="text">
     <string>&amp;Clear</string>
+   </property>
+  </action>
+  <action name="actionSearch">
+   <property name="text">
+    <string>Searc&amp;h</string>
    </property>
   </action>
  </widget>
