@@ -1,5 +1,5 @@
 # pylex-music-player
-	This is common music player with everything that should have one player.
+	This is simple music player with everything that should have one player.
 
 # Requirements
 	- Qt 5.4 or maybe older :)
