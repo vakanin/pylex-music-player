@@ -5,6 +5,7 @@ from PyQt4 import *
 from time import sleep
 from copy import copy
 
+
 class TestAudioPlayer(unittest.TestCase):
 
     @classmethod
@@ -116,9 +117,88 @@ class TestAudioPlayer(unittest.TestCase):
         self.assertNotEqual(next_index, prev_index, playing_song_index)
         self.assertEqual(self.player.media_state, 'Playing')
 
-    @unittest.skip("sorting test skipped")
-    def test_sort(self):
-        pass
+    def test_sort_by_filename(self):
+        current_playlist = []
+        for index in range(self.player.listWidget.count()):
+            current_playlist.append(self.player.listWidget.item(index).text())
+        self.player.actionFilename.triggered.emit()
+        sorted_by_filename = Playlist.sort_by_filename(current_playlist)
+        result = []
+        for index in range(self.player.listWidget.count()):
+            result.append(self.player.listWidget.item(index).text())
+        self.assertEqual(result, sorted_by_filename)
+
+    def test_sort_by_title(self):
+        title_song_name = []
+        for song_name, filename in self.player.full_paths.items():
+            audio = ID3(filename)
+            try:
+                # in this way we can get title
+                title = audio['TIT2'].text[0]
+            except:
+                title = ''
+            title_song_name.append((song_name, title))
+        self.player.actionTitle.triggered.emit()
+        sorted_by_title = Playlist.sort_by_title(title_song_name)
+        result_check = [song for song, _ in sorted_by_title]
+        result = []
+        for index in range(self.player.listWidget.count()):
+            result.append(self.player.listWidget.item(index).text())
+        self.assertEqual(result, result_check)
+
+    def test_sort_by_genre(self):
+        genre_song_name = []
+        for song_name, filename in self.player.full_paths.items():
+            audio = ID3(filename)
+            try:
+                # in this way we can get genre
+                genre = audio['TCON'].text[0]
+            except:
+                genre = ''
+            genre_song_name.append((song_name, genre))
+        self.player.actionGenre.triggered.emit()
+        sorted_by_genre = Playlist.sort_by_genre(genre_song_name)
+        result_check = [song for song, _ in sorted_by_genre]
+        result = []
+        for index in range(self.player.listWidget.count()):
+            result.append(self.player.listWidget.item(index).text())
+        self.assertEqual(result, result_check)
+
+    def test_sort_by_artist(self):
+        artist_song_name = []
+        for song_name, filename in self.player.full_paths.items():
+            audio = ID3(filename)
+            try:
+                # in this way we can get artist
+                artist = audio['TPE1'].text[0]
+            except:
+                artist = ''
+            artist_song_name.append((song_name, artist))
+        self.player.actionArtist.triggered.emit()
+        sorted_by_artist = Playlist.sort_by_artist(artist_song_name)
+        result_check = [song for song, _ in sorted_by_artist]
+        result = []
+        for index in range(self.player.listWidget.count()):
+            result.append(self.player.listWidget.item(index).text())
+        self.assertEqual(result, result_check)
+
+    def test_sort_by_year(self):
+        year_song_name = []
+        for song_name, filename in self.player.full_paths.items():
+            audio = ID3(filename)
+            try:
+                # in this way we can get year
+                year = audio['TDRC'].text[0]
+            except:
+                year = ''
+            year_song_name.append((song_name, year))
+        self.player.actionYear.triggered.emit()
+        sorted_by_year = Playlist.sort_by_year(year_song_name)
+        result_check = [song for song, _ in sorted_by_year]
+        result = []
+        for index in range(self.player.listWidget.count()):
+            result.append(self.player.listWidget.item(index).text())
+        self.assertEqual(result, result_check)
 
     def test_shuffle_songs(self):
         items = []
@@ -130,32 +210,43 @@ class TestAudioPlayer(unittest.TestCase):
             shuffeled_items.append(self.player.listWidget.item(index).text())
         self.assertNotEqual(items, shuffeled_items)
 
-#    @unittest.skip
+#    @unittest.skip()
 #    def test_scrobble(self):
 #        pass
 #
 #
-#class TestPlaylist(unittest.TestCase):
-#
-#    def test_sort_by_title(self):
-#        pass
-#
-#    def test_sort_by_artist(self):
-#        pass
-#
-#    def test_sort_by_album(self):
-#        pass
-#
-#    def test_sort_by_year(self):
-#        pass
-#
-#    def test_sort_by_genre(self):
-#        pass
-#
-#    def test_shuffle(self):
-#        pass
-#
-#
+
+
+class TestPlaylist(unittest.TestCase):
+
+    def setUp(self):
+        self.list_to_sort = [4, 2, 1, 8, 101, 29]
+        self.list_of_tuples = [('w', 3), ('b', 1), ('k', 4), ('d', 2)]
+
+    def test_sort_by_filename(self):
+        sorted_list = Playlist.sort_by_filename(self.list_to_sort)
+        self.assertEqual(sorted_list, [1, 2, 4, 8, 29, 101])
+
+    def test_sort_by_title(self):
+        sorted_list = Playlist.sort_by_title(self.list_of_tuples)
+        self.assertEqual(sorted_list,
+                         [('b', 1), ('d', 2), ('w', 3), ('k', 4)])
+
+    def test_sort_by_artist(self):
+        sorted_list = Playlist.sort_by_title(self.list_of_tuples)
+        self.assertEqual(sorted_list,
+                         [('b', 1), ('d', 2), ('w', 3), ('k', 4)])
+
+    def test_sort_by_year(self):
+        sorted_list = Playlist.sort_by_title(self.list_of_tuples)
+        self.assertEqual(sorted_list,
+                         [('b', 1), ('d', 2), ('w', 3), ('k', 4)])
+
+    def test_sort_by_genre(self):
+        sorted_list = Playlist.sort_by_title(self.list_of_tuples)
+        self.assertEqual(sorted_list,
+                         [('b', 1), ('d', 2), ('w', 3), ('k', 4)])
+
 if __name__ == '__main__':
     app = PySide.QtGui.QApplication(sys.argv)
     window = AudioPlayer()

@@ -235,7 +235,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
                     title = ''
                 title_song_name.append((song_name, title))
             sorted_title_song_name = Playlist.sort_by_title(title_song_name)
-            songs_sorted_by_title = [song for song, title in
+            songs_sorted_by_title = [song for song, _ in
                                      sorted_title_song_name]
             self.listWidget.clear()
             self.listWidget.addItems(songs_sorted_by_title)
