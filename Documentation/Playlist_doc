@@ -1,0 +1,40 @@
+Help on module playlist:
+
+NAME
+    playlist
+
+CLASSES
+    builtins.object
+        Playlist
+    
+    class Playlist(builtins.object)
+     |  Static methods defined here:
+     |  
+     |  sort_by_artist(playlist)
+     |      # this method will sort a playlist by artist/alphabetically
+     |  
+     |  sort_by_filename(playlist)
+     |      # this method will sort a playlist by filename alphabetically
+     |  
+     |  sort_by_genre(playlist)
+     |      # this method will sort a playlist by genre/alphabetically
+     |  
+     |  sort_by_title(playlist)
+     |      # this method will sort a playlist by title/alphabetically
+     |  
+     |  sort_by_year(playlist)
+     |      # this method will sort playlist by year
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FILE
+    ./playlist.py
+
+

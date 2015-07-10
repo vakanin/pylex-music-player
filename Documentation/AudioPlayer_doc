@@ -1,0 +1,941 @@
+Help on module player:
+
+NAME
+    player
+
+CLASSES
+    PySide.QtGui.QMainWindow(PySide.QtGui.QWidget)
+        AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow)
+    playerUI.Ui_MainWindow(builtins.object)
+        AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow)
+    
+    class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow)
+     |  Method resolution order:
+     |      AudioPlayer
+     |      PySide.QtGui.QMainWindow
+     |      PySide.QtGui.QWidget
+     |      PySide.QtCore.QObject
+     |      PySide.QtGui.QPaintDevice
+     |      Shiboken.Object
+     |      playerUI.Ui_MainWindow
+     |      builtins.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, parent=None)
+     |      # here we will make all connections with a GUI
+     |  
+     |  clear(self)
+     |      # this method will clear a playlist when you click on Playlist-->Clear and
+     |      # actionClear signal was emitted
+     |  
+     |  exit(self)
+     |      # this method will close the application when button Exit was clicked or
+     |      # you choose File-->Quit
+     |  
+     |  keyPressEvent(self, e)
+     |  
+     |  next(self)
+     |      # this method will play next song from playlist random song,
+     |      # if shuffle mode is on
+     |      # this method will be called when button Next was clicked or
+     |      # current song was finished (QMediaObject.finished signal was emitted)
+     |  
+     |  next_or_repeat(self)
+     |      # this method will be called if repeat song mode is on and
+     |      # current song was finished and QMediaObject.finished signal was emitted
+     |  
+     |  open(self)
+     |      # this method will be called, when user clicks with mouse on File-->Open
+     |      # (actio_Open signal was emitted)
+     |      # after that you can see new dialog window from which you can choose
+     |      # all music files for your playlist. With this method you can add
+     |      # music files every time you want
+     |  
+     |  pause(self)
+     |      # method that will pause song, if the song status is not "Paused"
+     |      # this method will be called when you click on button Pause
+     |  
+     |  play(self)
+     |      # method that will play song, if the song status is not "Playing"
+     |      # this method will be called when you click on button Play
+     |      # this method should be called every time when you want to play
+     |      # current media object
+     |  
+     |  play_first(self)
+     |      # method that will play first song in playlist
+     |      # this method will be called when repeat playlist mode is on and
+     |      # after current song finished signal was emitted() or user
+     |      # clicks on button Next
+     |  
+     |  play_item(self, item)
+     |      # method that will play double clicked song
+     |      # user can choose song from playlist and when clicks twice on it, this
+     |      # method will be called.
+     |      # item is argument given by QListWidget.itemDoubleClicked signal
+     |  
+     |  play_last(self)
+     |      # this method will play last song in playlist
+     |  
+     |  previous(self)
+     |      # this method will start previous song in playlist
+     |      # when button Previous was clicked
+     |  
+     |  random_song(self)
+     |      # this method will be called if random song mode is on and
+     |      # current song was finished (QMediaObject.finished signal was emitted) or
+     |      # button Next was clicked
+     |  
+     |  remove(self)
+     |      # this method will remove selected song from playlist
+     |      # this method will be called when you pres Delete button on your keyboard
+     |  
+     |  search(self)
+     |      # this method will be called when you choose Playlist-->Search
+     |      # this method will filter all songs in playlist in which name
+     |      # there is your input text
+     |  
+     |  shuffle_songs(self)
+     |      # this method will shuffle my songs when actionShuffle signal was emitted
+     |      # this method will be called when you click on Playlist-->Shuffle
+     |  
+     |  slider_value_change(self)
+     |      # this method will called when you drag slider and play song from
+     |      # the time which is equal to new slider value
+     |  
+     |  sort(self, code)
+     |      # this method sort playlist by file(f), title(t), artist(a) and year(y)
+     |      # this method will be called when you choose Playlist-->Sort by-->key
+     |      # where key is one of Filename, Artist, Title or Year
+     |  
+     |  stop(self)
+     |      # method will stop song, if the song status is not "Stopped"
+     |      # this method will be called when you click on button Stop
+     |  
+     |  time_change(self, time)
+     |      # this method move slider every time when QMediaObject.tick signal was
+     |      # emitted
+     |  
+     |  total_time_change(self, time)
+     |      # this method set range for slider, when totalTimeChanged signal was
+     |      # emitted
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  staticMetaObject = <PySide.QtCore.QMetaObject object>
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from PySide.QtGui.QMainWindow:
+     |  
+     |  __new__(*args, **kwargs) from Shiboken.ObjectType
+     |      Create and return a new object.  See help(type) for accurate signature.
+     |  
+     |  addDockWidget(...)
+     |  
+     |  addToolBar(...)
+     |  
+     |  addToolBarBreak(...)
+     |  
+     |  centralWidget(...)
+     |  
+     |  contextMenuEvent(...)
+     |  
+     |  corner(...)
+     |  
+     |  createPopupMenu(...)
+     |  
+     |  dockOptions(...)
+     |  
+     |  dockWidgetArea(...)
+     |  
+     |  documentMode(...)
+     |  
+     |  event(...)
+     |  
+     |  iconSize(...)
+     |  
+     |  insertToolBar(...)
+     |  
+     |  insertToolBarBreak(...)
+     |  
+     |  isAnimated(...)
+     |  
+     |  isDockNestingEnabled(...)
+     |  
+     |  isSeparator(...)
+     |  
+     |  menuBar(...)
+     |  
+     |  menuWidget(...)
+     |  
+     |  removeDockWidget(...)
+     |  
+     |  removeToolBar(...)
+     |  
+     |  removeToolBarBreak(...)
+     |  
+     |  restoreDockWidget(...)
+     |  
+     |  restoreState(...)
+     |  
+     |  saveState(...)
+     |  
+     |  setAnimated(...)
+     |  
+     |  setCentralWidget(...)
+     |  
+     |  setCorner(...)
+     |  
+     |  setDockNestingEnabled(...)
+     |  
+     |  setDockOptions(...)
+     |  
+     |  setDocumentMode(...)
+     |  
+     |  setIconSize(...)
+     |  
+     |  setMenuBar(...)
+     |  
+     |  setMenuWidget(...)
+     |  
+     |  setStatusBar(...)
+     |  
+     |  setTabPosition(...)
+     |  
+     |  setTabShape(...)
+     |  
+     |  setToolButtonStyle(...)
+     |  
+     |  setUnifiedTitleAndToolBarOnMac(...)
+     |  
+     |  splitDockWidget(...)
+     |  
+     |  statusBar(...)
+     |  
+     |  tabPosition(...)
+     |  
+     |  tabShape(...)
+     |  
+     |  tabifiedDockWidgets(...)
+     |  
+     |  tabifyDockWidget(...)
+     |  
+     |  toolBarArea(...)
+     |  
+     |  toolBarBreak(...)
+     |  
+     |  toolButtonStyle(...)
+     |  
+     |  unifiedTitleAndToolBarOnMac(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from PySide.QtGui.QMainWindow:
+     |  
+     |  AllowNestedDocks = PySide.QtGui.QMainWindow.DockOption.AllowNestedDock...
+     |  
+     |  AllowTabbedDocks = PySide.QtGui.QMainWindow.DockOption.AllowTabbedDock...
+     |  
+     |  AnimatedDocks = PySide.QtGui.QMainWindow.DockOption.AnimatedDocks
+     |  
+     |  DockOption = <class 'PySide.QtGui.QMainWindow.DockOption'>
+     |  
+     |  
+     |  DockOptions = <class 'DockOptions'>
+     |  
+     |  
+     |  ForceTabbedDocks = PySide.QtGui.QMainWindow.DockOption.ForceTabbedDock...
+     |  
+     |  VerticalTabs = PySide.QtGui.QMainWindow.DockOption.VerticalTabs
+     |  
+     |  iconSizeChanged = <PySide.QtCore.Signal object>
+     |      Signal
+     |  
+     |  toolButtonStyleChanged = <PySide.QtCore.Signal object>
+     |      Signal
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from PySide.QtGui.QWidget:
+     |  
+     |  acceptDrops(...)
+     |  
+     |  accessibleDescription(...)
+     |  
+     |  accessibleName(...)
+     |  
+     |  actionEvent(...)
+     |  
+     |  actions(...)
+     |  
+     |  activateWindow(...)
+     |  
+     |  addAction(...)
+     |  
+     |  addActions(...)
+     |  
+     |  adjustSize(...)
+     |  
+     |  autoFillBackground(...)
+     |  
+     |  backgroundRole(...)
+     |  
+     |  baseSize(...)
+     |  
+     |  changeEvent(...)
+     |  
+     |  childAt(...)
+     |  
+     |  childrenRect(...)
+     |  
+     |  childrenRegion(...)
+     |  
+     |  clearFocus(...)
+     |  
+     |  clearMask(...)
+     |  
+     |  close(...)
+     |  
+     |  closeEvent(...)
+     |  
+     |  contentsMargins(...)
+     |  
+     |  contentsRect(...)
+     |  
+     |  contextMenuPolicy(...)
+     |  
+     |  createWinId(...)
+     |  
+     |  cursor(...)
+     |  
+     |  destroy(...)
+     |  
+     |  devType(...)
+     |  
+     |  dragEnterEvent(...)
+     |  
+     |  dragLeaveEvent(...)
+     |  
+     |  dragMoveEvent(...)
+     |  
+     |  dropEvent(...)
+     |  
+     |  effectiveWinId(...)
+     |  
+     |  ensurePolished(...)
+     |  
+     |  enterEvent(...)
+     |  
+     |  focusInEvent(...)
+     |  
+     |  focusNextChild(...)
+     |  
+     |  focusNextPrevChild(...)
+     |  
+     |  focusOutEvent(...)
+     |  
+     |  focusPolicy(...)
+     |  
+     |  focusPreviousChild(...)
+     |  
+     |  focusProxy(...)
+     |  
+     |  focusWidget(...)
+     |  
+     |  font(...)
+     |  
+     |  fontInfo(...)
+     |  
+     |  fontMetrics(...)
+     |  
+     |  foregroundRole(...)
+     |  
+     |  frameGeometry(...)
+     |  
+     |  frameSize(...)
+     |  
+     |  geometry(...)
+     |  
+     |  getContentsMargins(...)
+     |  
+     |  grabGesture(...)
+     |  
+     |  grabKeyboard(...)
+     |  
+     |  grabMouse(...)
+     |  
+     |  grabShortcut(...)
+     |  
+     |  graphicsEffect(...)
+     |  
+     |  graphicsProxyWidget(...)
+     |  
+     |  hasFocus(...)
+     |  
+     |  hasMouseTracking(...)
+     |  
+     |  height(...)
+     |  
+     |  heightForWidth(...)
+     |  
+     |  hide(...)
+     |  
+     |  hideEvent(...)
+     |  
+     |  inputContext(...)
+     |  
+     |  inputMethodEvent(...)
+     |  
+     |  inputMethodHints(...)
+     |  
+     |  inputMethodQuery(...)
+     |  
+     |  insertAction(...)
+     |  
+     |  insertActions(...)
+     |  
+     |  isActiveWindow(...)
+     |  
+     |  isAncestorOf(...)
+     |  
+     |  isEnabled(...)
+     |  
+     |  isEnabledTo(...)
+     |  
+     |  isFullScreen(...)
+     |  
+     |  isHidden(...)
+     |  
+     |  isLeftToRight(...)
+     |  
+     |  isMaximized(...)
+     |  
+     |  isMinimized(...)
+     |  
+     |  isModal(...)
+     |  
+     |  isRightToLeft(...)
+     |  
+     |  isVisible(...)
+     |  
+     |  isVisibleTo(...)
+     |  
+     |  isWindow(...)
+     |  
+     |  isWindowModified(...)
+     |  
+     |  keyReleaseEvent(...)
+     |  
+     |  languageChange(...)
+     |  
+     |  layout(...)
+     |  
+     |  layoutDirection(...)
+     |  
+     |  leaveEvent(...)
+     |  
+     |  locale(...)
+     |  
+     |  lower(...)
+     |  
+     |  mapFrom(...)
+     |  
+     |  mapFromGlobal(...)
+     |  
+     |  mapFromParent(...)
+     |  
+     |  mapTo(...)
+     |  
+     |  mapToGlobal(...)
+     |  
+     |  mapToParent(...)
+     |  
+     |  mask(...)
+     |  
+     |  maximumHeight(...)
+     |  
+     |  maximumSize(...)
+     |  
+     |  maximumWidth(...)
+     |  
+     |  metric(...)
+     |  
+     |  minimumHeight(...)
+     |  
+     |  minimumSize(...)
+     |  
+     |  minimumSizeHint(...)
+     |  
+     |  minimumWidth(...)
+     |  
+     |  mouseDoubleClickEvent(...)
+     |  
+     |  mouseMoveEvent(...)
+     |  
+     |  mousePressEvent(...)
+     |  
+     |  mouseReleaseEvent(...)
+     |  
+     |  move(...)
+     |  
+     |  moveEvent(...)
+     |  
+     |  nativeParentWidget(...)
+     |  
+     |  nextInFocusChain(...)
+     |  
+     |  normalGeometry(...)
+     |  
+     |  overrideWindowFlags(...)
+     |  
+     |  overrideWindowState(...)
+     |  
+     |  paintEngine(...)
+     |  
+     |  paintEvent(...)
+     |  
+     |  palette(...)
+     |  
+     |  parentWidget(...)
+     |  
+     |  pos(...)
+     |  
+     |  previousInFocusChain(...)
+     |  
+     |  raise_(...)
+     |  
+     |  rect(...)
+     |  
+     |  releaseKeyboard(...)
+     |  
+     |  releaseMouse(...)
+     |  
+     |  releaseShortcut(...)
+     |  
+     |  removeAction(...)
+     |  
+     |  render(...)
+     |  
+     |  repaint(...)
+     |  
+     |  resetInputContext(...)
+     |  
+     |  resize(...)
+     |  
+     |  resizeEvent(...)
+     |  
+     |  restoreGeometry(...)
+     |  
+     |  saveGeometry(...)
+     |  
+     |  scroll(...)
+     |  
+     |  setAcceptDrops(...)
+     |  
+     |  setAccessibleDescription(...)
+     |  
+     |  setAccessibleName(...)
+     |  
+     |  setAttribute(...)
+     |  
+     |  setAutoFillBackground(...)
+     |  
+     |  setBackgroundRole(...)
+     |  
+     |  setBaseSize(...)
+     |  
+     |  setContentsMargins(...)
+     |  
+     |  setContextMenuPolicy(...)
+     |  
+     |  setCursor(...)
+     |  
+     |  setDisabled(...)
+     |  
+     |  setEnabled(...)
+     |  
+     |  setFixedHeight(...)
+     |  
+     |  setFixedSize(...)
+     |  
+     |  setFixedWidth(...)
+     |  
+     |  setFocus(...)
+     |  
+     |  setFocusPolicy(...)
+     |  
+     |  setFocusProxy(...)
+     |  
+     |  setFont(...)
+     |  
+     |  setForegroundRole(...)
+     |  
+     |  setGeometry(...)
+     |  
+     |  setGraphicsEffect(...)
+     |  
+     |  setHidden(...)
+     |  
+     |  setInputContext(...)
+     |  
+     |  setInputMethodHints(...)
+     |  
+     |  setLayout(...)
+     |  
+     |  setLayoutDirection(...)
+     |  
+     |  setLocale(...)
+     |  
+     |  setMask(...)
+     |  
+     |  setMaximumHeight(...)
+     |  
+     |  setMaximumSize(...)
+     |  
+     |  setMaximumWidth(...)
+     |  
+     |  setMinimumHeight(...)
+     |  
+     |  setMinimumSize(...)
+     |  
+     |  setMinimumWidth(...)
+     |  
+     |  setMouseTracking(...)
+     |  
+     |  setPalette(...)
+     |  
+     |  setParent(...)
+     |  
+     |  setShortcutAutoRepeat(...)
+     |  
+     |  setShortcutEnabled(...)
+     |  
+     |  setSizeIncrement(...)
+     |  
+     |  setSizePolicy(...)
+     |  
+     |  setStatusTip(...)
+     |  
+     |  setStyle(...)
+     |  
+     |  setStyleSheet(...)
+     |  
+     |  setToolTip(...)
+     |  
+     |  setUpdatesEnabled(...)
+     |  
+     |  setVisible(...)
+     |  
+     |  setWhatsThis(...)
+     |  
+     |  setWindowFilePath(...)
+     |  
+     |  setWindowFlags(...)
+     |  
+     |  setWindowIcon(...)
+     |  
+     |  setWindowIconText(...)
+     |  
+     |  setWindowModality(...)
+     |  
+     |  setWindowModified(...)
+     |  
+     |  setWindowOpacity(...)
+     |  
+     |  setWindowRole(...)
+     |  
+     |  setWindowState(...)
+     |  
+     |  setWindowTitle(...)
+     |  
+     |  show(...)
+     |  
+     |  showEvent(...)
+     |  
+     |  showFullScreen(...)
+     |  
+     |  showMaximized(...)
+     |  
+     |  showMinimized(...)
+     |  
+     |  showNormal(...)
+     |  
+     |  size(...)
+     |  
+     |  sizeHint(...)
+     |  
+     |  sizeIncrement(...)
+     |  
+     |  sizePolicy(...)
+     |  
+     |  stackUnder(...)
+     |  
+     |  statusTip(...)
+     |  
+     |  style(...)
+     |  
+     |  styleSheet(...)
+     |  
+     |  tabletEvent(...)
+     |  
+     |  testAttribute(...)
+     |  
+     |  toolTip(...)
+     |  
+     |  underMouse(...)
+     |  
+     |  ungrabGesture(...)
+     |  
+     |  unsetCursor(...)
+     |  
+     |  unsetLayoutDirection(...)
+     |  
+     |  unsetLocale(...)
+     |  
+     |  update(...)
+     |  
+     |  updateGeometry(...)
+     |  
+     |  updateMicroFocus(...)
+     |  
+     |  updatesEnabled(...)
+     |  
+     |  visibleRegion(...)
+     |  
+     |  whatsThis(...)
+     |  
+     |  wheelEvent(...)
+     |  
+     |  width(...)
+     |  
+     |  winId(...)
+     |  
+     |  window(...)
+     |  
+     |  windowFilePath(...)
+     |  
+     |  windowFlags(...)
+     |  
+     |  windowIcon(...)
+     |  
+     |  windowIconText(...)
+     |  
+     |  windowModality(...)
+     |  
+     |  windowOpacity(...)
+     |  
+     |  windowRole(...)
+     |  
+     |  windowState(...)
+     |  
+     |  windowTitle(...)
+     |  
+     |  windowType(...)
+     |  
+     |  x(...)
+     |  
+     |  x11Info(...)
+     |  
+     |  x11PictureHandle(...)
+     |  
+     |  y(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Static methods inherited from PySide.QtGui.QWidget:
+     |  
+     |  keyboardGrabber(...)
+     |  
+     |  mouseGrabber(...)
+     |  
+     |  setTabOrder(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from PySide.QtGui.QWidget:
+     |  
+     |  DrawChildren = PySide.QtGui.QWidget.RenderFlag.DrawChildren
+     |  
+     |  DrawWindowBackground = PySide.QtGui.QWidget.RenderFlag.DrawWindowBackg...
+     |  
+     |  IgnoreMask = PySide.QtGui.QWidget.RenderFlag.IgnoreMask
+     |  
+     |  RenderFlag = <class 'PySide.QtGui.QWidget.RenderFlag'>
+     |  
+     |  
+     |  RenderFlags = <class 'RenderFlags'>
+     |  
+     |  
+     |  customContextMenuRequested = <PySide.QtCore.Signal object>
+     |      Signal
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from PySide.QtCore.QObject:
+     |  
+     |  __delattr__(self, name, /)
+     |      Implement delattr(self, name).
+     |  
+     |  __getattribute__(self, name, /)
+     |      Return getattr(self, name).
+     |  
+     |  __setattr__(self, name, value, /)
+     |      Implement setattr(self, name, value).
+     |  
+     |  blockSignals(...)
+     |  
+     |  childEvent(...)
+     |  
+     |  children(...)
+     |  
+     |  connectNotify(...)
+     |  
+     |  customEvent(...)
+     |  
+     |  deleteLater(...)
+     |  
+     |  disconnectNotify(...)
+     |  
+     |  dumpObjectInfo(...)
+     |  
+     |  dumpObjectTree(...)
+     |  
+     |  dynamicPropertyNames(...)
+     |  
+     |  emit(...)
+     |  
+     |  eventFilter(...)
+     |  
+     |  findChild(...)
+     |  
+     |  findChildren(...)
+     |  
+     |  inherits(...)
+     |  
+     |  installEventFilter(...)
+     |  
+     |  isWidgetType(...)
+     |  
+     |  killTimer(...)
+     |  
+     |  metaObject(...)
+     |  
+     |  moveToThread(...)
+     |  
+     |  objectName(...)
+     |  
+     |  parent(...)
+     |  
+     |  property(...)
+     |  
+     |  receivers(...)
+     |  
+     |  removeEventFilter(...)
+     |  
+     |  sender(...)
+     |  
+     |  senderSignalIndex(...)
+     |  
+     |  setObjectName(...)
+     |  
+     |  setProperty(...)
+     |  
+     |  signalsBlocked(...)
+     |  
+     |  startTimer(...)
+     |  
+     |  thread(...)
+     |  
+     |  timerEvent(...)
+     |  
+     |  tr(...)
+     |  
+     |  trUtf8(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Static methods inherited from PySide.QtCore.QObject:
+     |  
+     |  connect(...)
+     |  
+     |  disconnect(...)
+     |  
+     |  registerUserData(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from PySide.QtCore.QObject:
+     |  
+     |  destroyed = <PySide.QtCore.Signal object>
+     |      Signal
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from PySide.QtGui.QPaintDevice:
+     |  
+     |  colorCount(...)
+     |  
+     |  depth(...)
+     |  
+     |  heightMM(...)
+     |  
+     |  logicalDpiX(...)
+     |  
+     |  logicalDpiY(...)
+     |  
+     |  numColors(...)
+     |  
+     |  paintingActive(...)
+     |  
+     |  physicalDpiX(...)
+     |  
+     |  physicalDpiY(...)
+     |  
+     |  widthMM(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from PySide.QtGui.QPaintDevice:
+     |  
+     |  painters
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from PySide.QtGui.QPaintDevice:
+     |  
+     |  PaintDeviceMetric = <class 'PySide.QtGui.QPaintDevice.PaintDeviceMetri...
+     |  
+     |  
+     |  PdmDepth = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmDepth
+     |  
+     |  PdmDpiX = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmDpiX
+     |  
+     |  PdmDpiY = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmDpiY
+     |  
+     |  PdmHeight = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmHeight
+     |  
+     |  PdmHeightMM = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmHeightMM
+     |  
+     |  PdmNumColors = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmNumColor...
+     |  
+     |  PdmPhysicalDpiX = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmPhysi...
+     |  
+     |  PdmPhysicalDpiY = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmPhysi...
+     |  
+     |  PdmWidth = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmWidth
+     |  
+     |  PdmWidthMM = PySide.QtGui.QPaintDevice.PaintDeviceMetric.PdmWidthMM
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Shiboken.Object:
+     |  
+     |  __dict__
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from playerUI.Ui_MainWindow:
+     |  
+     |  retranslateUi(self, MainWindow)
+     |  
+     |  setupUi(self, MainWindow)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from playerUI.Ui_MainWindow:
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FILE
+    ./player.py
+
+
