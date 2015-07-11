@@ -190,11 +190,25 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
     def time_change(self, time):
         if not self.horizontalSlider.isSliderDown():
             self.horizontalSlider.setValue(time)
+        s = time/1000
+        m, s = divmod(s, 60)
+        min_ = str(int(m))
+        sec = str(int(s))
+        if len(sec) < 2:
+            sec = '0' + sec
+        self.timeLabel.setText(min_ + ':' + sec)
 
     # this method set range for slider, when totalTimeChanged signal was
     # emitted
     def total_time_change(self, time):
         self.horizontalSlider.setRange(0, time)
+        s = time/1000
+        m, s = divmod(s, 60)
+        min_ = str(int(m))
+        sec = str(int(s))
+        if len(sec) < 2:
+            sec = '0' + sec
+        self.totalTimeLabel.setText(min_ + ':' + sec)
 
     # this method will called when you drag slider and play song from
     # the time which is equal to new slider value

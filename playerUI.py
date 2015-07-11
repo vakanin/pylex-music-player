@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Fri Jul 10 22:35:09 2015
+# Created: Sat Jul 11 10:31:53 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -59,6 +59,14 @@ class Ui_MainWindow(object):
         self.randomCheckBox.setEnabled(False)
         self.randomCheckBox.setGeometry(QtCore.QRect(440, 240, 81, 22))
         self.randomCheckBox.setObjectName("randomCheckBox")
+        self.timeLabel = QtGui.QLabel(self.centralwidget)
+        self.timeLabel.setGeometry(QtCore.QRect(150, 240, 61, 20))
+        self.timeLabel.setText("")
+        self.timeLabel.setObjectName("timeLabel")
+        self.totalTimeLabel = QtGui.QLabel(self.centralwidget)
+        self.totalTimeLabel.setGeometry(QtCore.QRect(370, 240, 51, 20))
+        self.totalTimeLabel.setText("")
+        self.totalTimeLabel.setObjectName("totalTimeLabel")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 640, 25))
