@@ -147,11 +147,12 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             # this is because search method
             current_playlist = [song for song, _ in self.full_paths.items()]
             current_song = self.nowPlayingLabel.text()
+            current_playlist = sorted(current_playlist)
             for index, song in enumerate(current_playlist):
                 if song == current_song:
                     current_row = index
             self.listWidget.clear()
-            self.listWidget.addItems(sorted(current_playlist))
+            self.listWidget.addItems(current_playlist)
             self.listWidget.setCurrentRow(current_row)
             self.action_search_emitted = False
 
@@ -208,7 +209,11 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         sec = str(int(s))
         if len(sec) < 2:
             sec = '0' + sec
-        self.totalTimeLabel.setText(min_ + ':' + sec)
+        if self.media_state == 'Stopped':
+            self.totalTimeLabel.setText('0:00')
+        else:
+            self.totalTimeLabel.setText(min_ + ':' + sec)
+
 
     # this method will called when you drag slider and play song from
     # the time which is equal to new slider value
