@@ -210,11 +210,15 @@ class TestAudioPlayer(unittest.TestCase):
             shuffeled_items.append(self.player.listWidget.item(index).text())
         self.assertNotEqual(items, shuffeled_items)
 
-#    @unittest.skip()
-#    def test_scrobble(self):
-#        pass
-#
-#
+    def test_remove(self):
+        item = self.player.listWidget.currentItem()
+        item.setSelected(True)
+        song_name = item.text()
+        count_before_remove = self.player.listWidget.count()
+        self.player.remove()
+        count_after_remove = self.player.listWidget.count()
+        self.assertNotIn(song_name, list(self.player.full_paths.keys()))
+        self.assertEqual(count_before_remove, count_after_remove + 1)
 
 
 class TestPlaylist(unittest.TestCase):
