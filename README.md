@@ -2,17 +2,24 @@
 	This is simple music player with everything that should have one player.
 
 # Requirements
-	- Qt 5.4 or maybe older :)
-	- PyQt
-	- Python 3.4 or newer
+	- Qt4 or maybe older :)
+	- PyQt/PySide
+	- Python 3.4+
+	- mutagen
 	- you must have some music files on your computer :)
+
+# Python3 installation
+	- sudo apt-get install python3-minimal
+
+# PySide installation
+	- sudo apt-get install python3-pyside
 
 # Installation
 	git clone https://github.com/vakanin/pylex-music-player.git
 	python3 player.py
 
 # Usage
-	1. add some files or playlist with songs in the player
+	1. add some files with songs in the player
 	2. click "Play" button
 	3. just listen your favourite songs and have fun :)
 
@@ -30,7 +37,5 @@
 	You have button "Shuffle"
 
 ## How to increase/decrease volume?
-	There is two buttons and also you can do that with moving the volume button up or down.
+	There is volume slider and you can volume up or down with moving the volume slider left or right
 
-## How to scrobble?
-	Maybe you should click button "Scrobble" but I don't know exactly.
