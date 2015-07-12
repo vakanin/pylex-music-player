@@ -51,6 +51,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.actionShuffle.triggered.connect(self.shuffle_songs)
         self.actionSearch.triggered.connect(self.search)
         self.action_search_emitted = False      # True if search mode is ON
+        self.setAcceptDrops(True)
 
     def keyPressEvent(self, e):
         if e.key() == PySide.QtCore.Qt.Key_Delete:
@@ -74,13 +75,14 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
                                             "Audio Files (*.mp3 *.wav *.ogg)")[0]
 
         song_names = []
+        curr_index = self.listWidget.count()
         for filename in filenames:
             song_name = filename.split('/')[-1]
             song_names.append(song_name)            # this line will be removed
             self.listWidget.addItem(song_name)
             self.listWidget.show()
             self.full_paths[song_name] = filename
-        self.listWidget.setCurrentRow(0)
+        self.listWidget.setCurrentRow(curr_index)
         filename = filenames[0]
         song_name = filename.split('/')[-1]
         self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
@@ -445,6 +447,47 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
     # you choose File-->Quit
     def exit(self):
         sys.exit()
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls:
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasUrls:
+            event.setDropAction(PySide.QtCore.Qt.CopyAction)
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasUrls:
+            event.setDropAction(PySide.QtCore.Qt.CopyAction)
+            event.accept()
+            filenames = []
+            for url in event.mimeData().urls():
+                filenames.append(str(url.toLocalFile()))
+            self.read(filenames)
+        else:
+            event.ignore()
+
+    def read(self, filenames):
+        song_names = []
+        for filename in filenames:
+            song_name = filename.split('/')[-1]
+            song_names.append(song_name)
+            self.full_paths[song_name] = filename
+        self.listWidget.addItems(song_names)
+        self.listWidget.show()
+        self.stopButton.setEnabled(True)
+        self.playButton.setEnabled(True)
+        self.horizontalSlider.setEnabled(True)
+        self.nextButton.setEnabled(True)
+        self.prevButton.setEnabled(True)
+        self.repeatCheckBox.setEnabled(True)
+        self.randomCheckBox.setEnabled(True)
+        self.play_first()
 
 if __name__ == "__main__":
     app = PySide.QtGui.QApplication(sys.argv)
