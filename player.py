@@ -115,6 +115,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
+        self.volumeSlider.setAudioOutput(self.audio_output)
         self.nowPlayingLabel.setText(song_name)
         self.listWidget.setCurrentRow(0)
         self.play()
