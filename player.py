@@ -42,6 +42,9 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.volumeSlider = Phonon.VolumeSlider(self)
         self.volumeSlider.setGeometry(PySide.QtCore.QRect(520, 310, 91, 29))
         self.volumeSlider.setOrientation(PySide.QtCore.Qt.Horizontal)
+        self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
+        self.volumeSlider.setAudioOutput(self.audio_output)
+ 
         self.actionFilename.triggered.connect(partial(self.sort, 'f'))
         self.actionTitle.triggered.connect(partial(self.sort, 't'))
         self.actionArtist.triggered.connect(partial(self.sort, 'a'))
@@ -86,11 +89,9 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         filename = filenames[0]
         song_name = filename.split('/')[-1]
         self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
-        Phonon.createPath(self.media_obj, self.audio_output)
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
-        self.volumeSlider.setAudioOutput(self.audio_output)
         self.nowPlayingLabel.setText(song_name)
         self.media_obj.play()
         self.media_state = 'Playing'
@@ -110,12 +111,10 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
     def play_first(self):
         song_name = self.listWidget.item(0).text()
         filename = self.full_paths[song_name]
-        self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
         Phonon.createPath(self.media_obj, self.audio_output)
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
-        self.volumeSlider.setAudioOutput(self.audio_output)
         self.nowPlayingLabel.setText(song_name)
         self.listWidget.setCurrentRow(0)
         self.play()
@@ -125,7 +124,6 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         last_index = self.listWidget.count() - 1
         song_name = self.listWidget.item(last_index).text()
         filename = self.full_paths[song_name]
-        self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
         Phonon.createPath(self.media_obj, self.audio_output)
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
