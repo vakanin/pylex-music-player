@@ -1,15 +1,10 @@
 import sys
-import playerUI
-import PySide
-from PyQt4 import *
-from functools import partial
-from PySide.phonon import Phonon
 from mutagen.id3 import ID3
 from random import randint, choice
 from playlist import *
+from playerGUI import *
 
-
-class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
+class AudioPlayer(PlayerGui):
 
     # here we will make all connections with a GUI
     def __init__(self, parent=None):
@@ -17,44 +12,8 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         # full_paths contain full path name for each media
         self.full_paths = {}
         self.media_objects_info = {}
-        self.setupUi(self)
-        self.media_obj = Phonon.MediaObject(self)
-        self.media_obj.finished.connect(self.next_or_repeat)
-        self.media_state = 'Unknown'
         self.current_time = 0
-        self.action_Open.triggered.connect(self.open)
-        self.action_Quit.triggered.connect(self.exit)
-        self.horizontalSlider.setValue(0)
-        self.horizontalSlider.setEnabled(False)
-        self.horizontalSlider.sliderReleased.connect(self.slider_value_change)
-        self.playButton.clicked.connect(self.play)
-        self.playButton.setText('Play')
-        self.playButton.setEnabled(False)
-        self.stopButton.clicked.connect(self.stop)
-        self.stopButton.setEnabled(False)
-        self.exitButton.clicked.connect(self.exit)
-        self.exitButton.setEnabled(True)
-        self.nextButton.clicked.connect(self.next)
-        self.nextButton.setEnabled(False)
-        self.prevButton.clicked.connect(self.previous)
-        self.prevButton.setEnabled(False)
-        self.listWidget.itemDoubleClicked.connect(self.play_item)
-        self.volumeSlider = Phonon.VolumeSlider(self)
-        self.volumeSlider.setGeometry(PySide.QtCore.QRect(520, 310, 91, 29))
-        self.volumeSlider.setOrientation(PySide.QtCore.Qt.Horizontal)
-        self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
-        self.volumeSlider.setAudioOutput(self.audio_output)
- 
-        self.actionFilename.triggered.connect(partial(self.sort, 'f'))
-        self.actionTitle.triggered.connect(partial(self.sort, 't'))
-        self.actionArtist.triggered.connect(partial(self.sort, 'a'))
-        self.actionYear.triggered.connect(partial(self.sort, 'y'))
-        self.actionGenre.triggered.connect(partial(self.sort, 'g'))
-        self.actionClear.triggered.connect(self.clear)
-        self.actionShuffle.triggered.connect(self.shuffle_songs)
-        self.actionSearch.triggered.connect(self.search)
-        self.action_search_emitted = False      # True if search mode is ON
-        self.setAcceptDrops(True)
+
 
     def keyPressEvent(self, e):
         if e.key() == PySide.QtCore.Qt.Key_Delete:
@@ -66,10 +25,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
     # all music files for your playlist. With this method you can add
     # music files every time you want
     def open(self):
-        self.actionTitle.setChecked(False)
-        self.actionArtist.setChecked(False)
-        self.actionYear.setChecked(False)
-        self.actionGenre.setChecked(False)
+        self.open_modifications()
         dialog = PySide.QtGui.QFileDialog()
         dialog.setViewMode(PySide.QtGui.QFileDialog.Detail)
         filenames = dialog.getOpenFileNames(self,
@@ -88,21 +44,13 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.listWidget.setCurrentRow(curr_index)
         filename = filenames[0]
         song_name = filename.split('/')[-1]
-        self.audio_output = Phonon.AudioOutput(Phonon.MusicCategory, self)
+        Phonon.createPath(self.media_obj, self.audio_output)
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
-        self.nowPlayingLabel.setText(song_name)
-        self.media_obj.play()
+        self.set_now_playing_label(song_name)
+        self.play()
         self.media_state = 'Playing'
-        self.stopButton.setEnabled(True)
-        self.playButton.setEnabled(True)
-        self.playButton.setText("Pause")
-        self.horizontalSlider.setEnabled(True)
-        self.nextButton.setEnabled(True)
-        self.prevButton.setEnabled(True)
-        self.repeatCheckBox.setEnabled(True)
-        self.randomCheckBox.setEnabled(True)
 
     # method that will play first song in playlist
     # this method will be called when repeat playlist mode is on and
@@ -111,11 +59,10 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
     def play_first(self):
         song_name = self.listWidget.item(0).text()
         filename = self.full_paths[song_name]
-        Phonon.createPath(self.media_obj, self.audio_output)
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
-        self.nowPlayingLabel.setText(song_name)
+        self.set_now_playing_label(song_name)
         self.listWidget.setCurrentRow(0)
         self.play()
 
@@ -124,11 +71,10 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         last_index = self.listWidget.count() - 1
         song_name = self.listWidget.item(last_index).text()
         filename = self.full_paths[song_name]
-        Phonon.createPath(self.media_obj, self.audio_output)
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
-        self.nowPlayingLabel.setText(song_name)
+        self.set_now_playing_label(song_name)
         self.listWidget.setCurrentRow(last_index)
         self.play()
 
@@ -142,12 +88,12 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
-        self.nowPlayingLabel.setText(song_name)
+        self.set_now_playing_label(song_name)
         self.play()
         if self.action_search_emitted is True:
             # this is because search method
             current_playlist = [song for song, _ in self.full_paths.items()]
-            current_song = self.nowPlayingLabel.text()
+            current_song = self.get_now_playing_label()
             current_playlist = sorted(current_playlist)
             for index, song in enumerate(current_playlist):
                 if song == current_song:
@@ -165,7 +111,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         if Phonon.State.PlayingState != self.media_obj.state():
             self.media_obj.play()
             self.media_state = 'Playing'
-            self.playButton.setText('Pause')
+            self.play_button_pause()
         else:
             self.pause()
             self.media_state = 'Paused'
@@ -176,7 +122,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         if Phonon.State.PausedState != self.media_obj.state():
             self.media_obj.pause()
             self.media_state = 'Paused'
-            self.playButton.setText('Play')
+            self.play_button_play()
 
     # method will stop song, if the song status is not "Stopped"
     # this method will be called when you click on button Stop
@@ -184,26 +130,26 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         if Phonon.State.StoppedState != self.media_obj.state():
             self.media_obj.stop()
             self.current_time = 0
-            self.playButton.setText('Play')
+            self.play_button_play()
         self.media_state = 'Stopped'
 
     # this method move slider every time when QMediaObject.tick signal was
     # emitted
     def time_change(self, time):
         if not self.horizontalSlider.isSliderDown():
-            self.horizontalSlider.setValue(time)
+            self.set_horizontal_slider_value(time)
         s = time / 1000
         m, s = divmod(s, 60)
         min_ = str(int(m))
         sec = str(int(s))
         if len(sec) < 2:
             sec = '0' + sec
-        self.timeLabel.setText(min_ + ':' + sec)
+        self.set_time_label(min_ + ':' + sec)
 
     # this method set range for slider, when totalTimeChanged signal was
     # emitted
     def total_time_change(self, time):
-        self.horizontalSlider.setRange(0, time)
+        self.set_horizontal_slider_range(0, time)
         s = time / 1000
         m, s = divmod(s, 60)
         min_ = str(int(m))
@@ -211,14 +157,14 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         if len(sec) < 2:
             sec = '0' + sec
         if self.media_state == 'Stopped':
-            self.totalTimeLabel.setText('0:00')
+            self.set_total_time_label('0:00')
         else:
-            self.totalTimeLabel.setText(min_ + ':' + sec)
+            self.set_total_time_label(min_ + ':' + sec)
 
     # this method will called when you drag slider and play song from
     # the time which is equal to new slider value
     def slider_value_change(self):
-        value = self.horizontalSlider.value()
+        value = self.get_horizontal_slider_value()
         self.media_obj.seek(value)
 
     # this method will be called if repeat song mode is on and
@@ -240,7 +186,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         self.media_obj.setCurrentSource(Phonon.MediaSource(filename))
         self.media_obj.tick.connect(self.time_change)
         self.media_obj.totalTimeChanged.connect(self.total_time_change)
-        self.nowPlayingLabel.setText(song_name)
+        self.set_now_playing_label(song_name)
         self.play()
 
     # this method will play next song from playlist random song,
@@ -263,7 +209,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.media_obj.setCurrentSource(Phonon.MediaSource(next_filename))
             self.media_obj.tick.connect(self.time_change)
             self.media_obj.totalTimeChanged.connect(self.total_time_change)
-            self.nowPlayingLabel.setText(next_song_name)
+            self.set_now_playing_label(next_song_name)
             self.play()
 
     # this method will start previous song in playlist
@@ -280,7 +226,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.media_obj.setCurrentSource(Phonon.MediaSource(prev_filename))
             self.media_obj.tick.connect(self.time_change)
             self.media_obj.totalTimeChanged.connect(self.total_time_change)
-            self.nowPlayingLabel.setText(prev_song_name)
+            self.set_now_playing_label(prev_song_name)
             self.play()
 
     # this method sort playlist by file(f), title(t), artist(a) and year(y)
@@ -290,10 +236,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
         if code == 'f':
             self.listWidget.sortItems()
             self.listWidget.show()
-            self.actionTitle.setChecked(False)
-            self.actionArtist.setChecked(False)
-            self.actionYear.setChecked(False)
-            self.actionGenre.setChecked(False)
+            self.sort_filename_modifications()
         elif code == 't':
             title_song_name = []
             for song_name, filename in self.full_paths.items():
@@ -310,10 +253,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.listWidget.clear()
             self.listWidget.addItems(songs_sorted_by_title)
             self.listWidget.show()
-            self.actionFilename.setChecked(False)
-            self.actionArtist.setChecked(False)
-            self.actionYear.setChecked(False)
-            self.actionGenre.setChecked(False)
+            self.sort_title_modifications()
         elif code == 'a':
             artist_song_name = []
             for song_name, filename in self.full_paths.items():
@@ -331,10 +271,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.listWidget.clear()
             self.listWidget.addItems(songs_sorted_by_artist)
             self.listWidget.show()
-            self.actionFilename.setChecked(False)
-            self.actionTitle.setChecked(False)
-            self.actionYear.setChecked(False)
-            self.actionGenre.setChecked(False)
+            self.sort_artist_modifications()
         elif code == 'y':
             year_song_name = []
             for song_name, filename in self.full_paths.items():
@@ -351,10 +288,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.listWidget.clear()
             self.listWidget.addItems(songs_sorted_by_year)
             self.listWidget.show()
-            self.actionFilename.setChecked(False)
-            self.actionTitle.setChecked(False)
-            self.actionArtist.setChecked(False)
-            self.actionGenre.setChecked(False)
+            self.sort_year_modifications()
         elif code == 'g':
             genre_song_name = []
             for song_name, filename in self.full_paths.items():
@@ -371,10 +305,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.listWidget.clear()
             self.listWidget.addItems(songs_sorted_by_genre)
             self.listWidget.show()
-            self.actionFilename.setChecked(False)
-            self.actionTitle.setChecked(False)
-            self.actionArtist.setChecked(False)
-            self.actionYear.setChecked(False)
+            self.sort_genre_modifications()
 
     # this method will shuffle my songs when actionShuffle signal was emitted
     # this method will be called when you click on Playlist-->Shuffle
@@ -479,13 +410,7 @@ class AudioPlayer(PySide.QtGui.QMainWindow, playerUI.Ui_MainWindow):
             self.full_paths[song_name] = filename
         self.listWidget.addItems(song_names)
         self.listWidget.show()
-        self.stopButton.setEnabled(True)
-        self.playButton.setEnabled(True)
-        self.horizontalSlider.setEnabled(True)
-        self.nextButton.setEnabled(True)
-        self.prevButton.setEnabled(True)
-        self.repeatCheckBox.setEnabled(True)
-        self.randomCheckBox.setEnabled(True)
+        self.read_modifications()
         self.play_first()
 
 if __name__ == "__main__":
